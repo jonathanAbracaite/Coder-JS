@@ -1,0 +1,4 @@
+Existe una cuenta ya creada 
+
+usuario: beto
+contraseña: 123

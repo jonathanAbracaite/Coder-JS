@@ -1,0 +1,27 @@
+.monto{
+    display: flex;
+    font-size: 100px;
+    justify-content: center;
+    background-color: lightseagreen;
+    color: white;
+    border-radius: 25px;
+    margin: 50px;
+    
+}
+.formu{
+    display: flex;
+    width: auto;
+    flex-direction: column;
+    justify-content: center;
+}
+.inputForm{
+    width: 200px;
+}
+.montoDescontado{
+    color: red;
+    font-weight: bold;
+}
+.itemMov{
+    text-decoration: none;
+    list-style: none;
+}

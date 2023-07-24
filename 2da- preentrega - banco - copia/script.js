@@ -1,3 +1,8 @@
+/* ====================================
+   ===          pantallas           ===
+   ====================================
+*/
+
 // obtención de pantallas principales
 let formPantallaSignup = document.getElementById("signup");
 let formPantallaLogin = document.getElementById("Login");
@@ -39,6 +44,7 @@ let success = "success";
 let warning = "warning";
 let movimiento = "light";
 let divNotis = document.getElementById("movimientosRecientes");
+
 // definicion de mensajes de alerta
 function alertMsg(type, msg) {
   return `<div class="alert alert-${type}" role="alert">
@@ -52,15 +58,7 @@ function alertMsg(type, msg) {
 */
 
 // lista de usuarios
-let usuarios = [
-  {
-    DNI: "42942629",
-    nombre: "Jonathan",
-    contraseña: "12345678",
-    saldo: 500,
-    operaciones: [],
-  },
-];
+let usuarios = [];
 
 // creación de objetos
 class Usuario {
@@ -119,14 +117,34 @@ btnAccionSignup.addEventListener("click", () => {
     );
   } else {
     usuarios.push(usuario);
+
+    cargarUsuariosALocalStorage()
     alertDiv.innerHTML = alertMsg(
       success,
-      "Te has registrado de forma exitosa 👌"
+      "Te has registrado de forma exitosa 👌, ya podes ingresar🔥"
     );
-    console.log(usuarios);
-    console.log(usuario.saldo);
+   
   }
 });
+// guarda user en usuarios en LS
+function cargarUsuariosALocalStorage() {
+  localStorage.setItem('usuarios', JSON.stringify(usuarios));
+}
+// trae user de usuarios en ls
+function traerUsuariosdeLocalStorage() {
+  const usuariosGuardados = localStorage.getItem('usuarios');
+  if (usuariosGuardados) {
+    usuarios = JSON.parse(usuariosGuardados);
+  } else {
+    // si no esta guardado se inicializa vacio
+    usuarios = [];
+  }
+}
+
+
+// ==============================================================================
+
+
 
 /* ====================================
    ===           lOGIN              ===
@@ -140,26 +158,34 @@ btnAccionLogin.addEventListener("click", () => {
   const passLogin = document.getElementById("passLogin").value;
   event.preventDefault();
 
+  traerUsuariosdeLocalStorage() // trae los usuarios de LS
   usuarios.forEach((usuario) => {
     if (usuario.DNI === DNILogin && usuario.contraseña === passLogin) {
+
+      // esconde formularios
       formPantallaLogin.style.display = ocultar;
       btnOpcionLogin.style.display = ocultar;
       btnOpcionSignup.style.display = ocultar;
       // muestra pantalla principal
       pantallaMain.style.display = mostrar;
-      // saldo actual
-
+    
       // saluda
       saludo(usuario);
+      // da regalo
       usuario.saldo = regaloNuevaCuenta(usuario);
-      console.log(usuario.saldo);
 
-      // prueba transferencia
+// ================================================================
 
+/* ====================================
+   ===        transferencias        ===
+   ====================================
+*/
+      // accion transferencia
       btnAccionTransferir.addEventListener("click", () => {
+        // obtención de datos
         let monto = parseInt(document.getElementById("monto").value);
         let destino = document.getElementById("alias").value;
-        console.log(usuario.saldo);
+
         event.preventDefault();
         if (monto === "" || monto < 0 || destino === "") {
           alertDiv2.innerHTML = alertMsg(
@@ -175,8 +201,12 @@ btnAccionLogin.addEventListener("click", () => {
           } else {
             usuario.saldo -= monto;
             event.preventDefault();
-            alertDiv2.innerHTML = alertMsg(success, "Operación exitosa");
 
+            alertDiv2.innerHTML = alertMsg(success, "Operación exitosa");
+            monto.innerHTML = ""
+            destino.innerHTML = ""
+
+            // se crea el objeto operacion
             const operacion = {
               tipo: "Transferencia",
               destino: destino,
@@ -184,6 +214,7 @@ btnAccionLogin.addEventListener("click", () => {
             };
 
             const listaDeOperaciones = usuario.operaciones;
+            // se guarda en la lista de operaciones del usuario
             listaDeOperaciones.push(operacion);
 
             // Actualizar la lista de operaciones en el elemento "divNotis"
@@ -207,7 +238,7 @@ btnAccionLogin.addEventListener("click", () => {
   });
 });
 /* ====================================
-   ===          main account        ===
+   ===   funciones main account     ===
    ====================================
 */
 
@@ -228,10 +259,10 @@ function muestraDineroActual(user) {
 }
 function regaloNuevaCuenta(user) {
   let montoActual = user.saldo;
-  console.log(montoActual);
+
   montoActual = montoActual + 500;
 
-  console.log(montoActual);
+
 
   let notiRegalo = alertMsg(
     success,

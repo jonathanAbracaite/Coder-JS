@@ -232,9 +232,16 @@ btnAccionLogin.addEventListener("click", () => {
           }
         }
       });
-
       return;
     }
+    else if (usuario.DNI !== DNILogin || usuario.contraseña !== passLogin){
+      alertDiv3.innerHTML = alertMsg(
+        warning,
+        `Uno o mas datos no son correctos, intentelo nuevamente <br>
+        `
+      );
+    }
+    
   });
 });
 /* ====================================
